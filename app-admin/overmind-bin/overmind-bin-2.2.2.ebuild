@@ -7,7 +7,7 @@ DESCRIPTION="Process manager for Procfile-based applications and tmux."
 HOMEPAGE="https://github.com/DarthSim/overmind"
 SRC_URI="https://github.com/DarthSim/overmind/releases/download/v${PV}/overmind-v${PV}-linux-amd64.gz -> ${P}.gz"
 
-LICENSE=""
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 
