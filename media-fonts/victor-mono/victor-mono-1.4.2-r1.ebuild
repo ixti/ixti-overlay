@@ -21,6 +21,10 @@ BDEPEND="app-arch/unzip"
 
 S="${WORKDIR}"
 
+FONT_CONF=(
+	"${FILESDIR}/66-victor-mono.conf"
+)
+
 src_install() {
 	use otf && { FONT_S="${S}/OTF"; FONT_SUFFIX="otf"; }
 	use ttf && { FONT_S="${S}/TTF"; FONT_SUFFIX="ttf"; }
