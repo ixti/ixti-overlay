@@ -138,7 +138,6 @@ CRATES="
 	strsim-0.9.3
 	syn-1.0.39
 	tar-0.4.30
-	tealdeer-1.4.1
 	tempfile-3.1.0
 	termcolor-1.1.0
 	thread_local-1.0.1
@@ -192,8 +191,8 @@ DESCRIPTION="A very fast implementation of tldr in Rust"
 HOMEPAGE="https://dbrgn.github.io/tealdeer/"
 SRC_URI="
 	https://github.com/dbrgn/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
-	$(cargo_crate_uris ${CRATES})
-"
+	$(cargo_crate_uris)
+	"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"

@@ -51,7 +51,6 @@ CRATES="
 	remove_dir_all-0.5.2
 	roff-0.1.0
 	scopeguard-1.1.0
-	sd-0.7.6
 	strsim-0.8.0
 	structopt-0.3.15
 	structopt-derive-0.4.8
@@ -74,7 +73,7 @@ CRATES="
 	winapi-0.3.8
 	winapi-i686-pc-windows-gnu-0.4.0
 	winapi-x86_64-pc-windows-gnu-0.4.0
-"
+	"
 
 inherit cargo
 
@@ -82,8 +81,8 @@ DESCRIPTION="Intuitive find & replace CLI (sed alternative)"
 HOMEPAGE="https://github.com/chmln/sd"
 SRC_URI="
 	https://github.com/chmln/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
-	$(cargo_crate_uris ${CRATES})
-"
+	$(cargo_crate_uris)
+	"
 
 LICENSE="MIT"
 SLOT="0"

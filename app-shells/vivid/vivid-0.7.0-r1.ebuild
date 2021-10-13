@@ -33,7 +33,6 @@ CRATES="
 	unicode-width-0.1.8
 	unicode-xid-0.2.2
 	vec_map-0.8.2
-	vivid-0.7.0
 	walkdir-2.3.2
 	wasi-0.10.2+wasi-snapshot-preview1
 	winapi-0.3.9
@@ -49,8 +48,8 @@ DESCRIPTION="A themeable LS_COLORS generator with a rich filetype datebase"
 HOMEPAGE="https://github.com/sharkdp/vivid"
 SRC_URI="
 	https://github.com/sharkdp/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
-	$(cargo_crate_uris ${CRATES})
-"
+	$(cargo_crate_uris)
+	"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
