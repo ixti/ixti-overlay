@@ -9,7 +9,7 @@ SRC_URI="https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${PV}.zip -> ${P}.
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64"
 
 BDEPEND="app-arch/unzip"
 

@@ -9,7 +9,7 @@ SRC_URI="https://github.com/postmodern/ruby-install/archive/v${PV}.tar.gz -> ${P
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 ~x86"
+KEYWORDS="~amd64 ~x86"
 
 DEPEND=">=app-shells/bash-3.0"
 RDEPEND="${DEPEND}

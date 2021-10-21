@@ -342,7 +342,7 @@ SRC_URI="https://github.com/evilmartians/lefthook/archive/v${PV}.tar.gz -> ${P}.
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64 ~x86"
 
 src_compile() {
 	go build -ldflags "-s -w"
