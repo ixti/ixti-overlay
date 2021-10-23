@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<use>
+		<flag name="modern">
+			Install round edge Bibata Cursors variants
+		</flag>
+		<flag name="original">
+			Install sharp edge Bibata Cursors variants
+		</flag>
+	</use>
+</pkgmetadata>
