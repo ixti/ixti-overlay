@@ -34,18 +34,17 @@ EGO_SUM=(
 	)
 go-module_set_globals
 
-DESCRIPTION="Process manager for Procfile-based applications and tmux."
+DESCRIPTION="Process manager for Procfile-based applications and tmux"
 HOMEPAGE="https://github.com/DarthSim/overmind"
 SRC_URI="https://github.com/DarthSim/overmind/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${EGO_SUM_SRC_URI}"
 
-LICENSE="MIT"
+LICENSE="MIT BSD BSD-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
-	app-misc/tmux
-	!app-admin/overmind-bin"
+	app-misc/tmux"
 
 src_compile() {
 	go build -ldflags "-s -w"
