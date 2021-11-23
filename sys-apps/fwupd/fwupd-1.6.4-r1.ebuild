@@ -14,12 +14,10 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="LGPL-2.1+"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
-IUSE="amt archive bluetooth dell elogind fastboot flashrom gnutls gtk-doc gusb introspection logitech lzma +man minimal modemmanager nvme policykit spi synaptics systemd test thunderbolt tpm uefi"
+IUSE="amt archive bluetooth dell elogind flashrom gnutls gtk-doc gusb introspection lzma +man minimal modemmanager nvme policykit spi synaptics systemd test thunderbolt tpm uefi"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	^^ ( elogind minimal systemd )
 	dell? ( uefi )
-	fastboot? ( gusb )
-	logitech? ( gusb )
 	minimal? ( !introspection )
 	spi? ( lzma )
 	synaptics? ( gnutls )
@@ -64,7 +62,6 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	flashrom? ( >=sys-apps/flashrom-1.2-r3 )
 	gnutls? ( net-libs/gnutls )
 	gusb? ( >=dev-libs/libgusb-0.3.5[introspection?] )
-	logitech? ( dev-libs/protobuf-c:= )
 	lzma? ( app-arch/xz-utils )
 	modemmanager? ( net-misc/modemmanager[qmi] )
 	policykit? ( >=sys-auth/polkit-0.103 )
@@ -88,6 +85,10 @@ DEPEND="
 	${COMMON_DEPEND}
 	x11-libs/pango[introspection]
 "
+
+PATCHES=(
+	"${FILESDIR}"/${PN}-1.5.7-logind_plugin.patch
+)
 
 pkg_setup() {
 	python-single-r1_pkg_setup
@@ -115,10 +116,8 @@ src_configure() {
 	local plugins=(
 		$(meson_use amt plugin_amt)
 		$(meson_use dell plugin_dell)
-		$(meson_use fastboot plugin_fastboot)
 		$(meson_use flashrom plugin_flashrom)
 		$(meson_use gusb plugin_altos)
-		$(meson_use logitech plugin_logitech_bulkcontroller)
 		$(meson_use modemmanager plugin_modem_manager)
 		$(meson_use nvme plugin_nvme)
 		$(meson_use spi plugin_intel_spi)

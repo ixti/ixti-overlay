@@ -3,9 +3,9 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{8..10} )
+PYTHON_COMPAT=( python3_{8..9} )
 
-inherit linux-info meson python-single-r1 vala xdg
+inherit linux-info meson python-single-r1 vala xdg toolchain-funcs
 
 DESCRIPTION="Aims to make updating firmware on Linux automatic, safe and reliable"
 HOMEPAGE="https://fwupd.org"
@@ -13,15 +13,12 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
-IUSE="amt archive bluetooth dell elogind fastboot flashrom gnutls gtk-doc gusb introspection logitech lzma +man minimal modemmanager nvme policykit spi synaptics systemd test thunderbolt tpm uefi"
+KEYWORDS="amd64 ~arm ~arm64 ~ppc64 x86"
+IUSE="agent amt archive bluetooth dell gnutls gtk-doc gusb elogind flashrom minimal introspection +man nvme policykit synaptics systemd test thunderbolt tpm uefi"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	^^ ( elogind minimal systemd )
 	dell? ( uefi )
-	fastboot? ( gusb )
-	logitech? ( gusb )
 	minimal? ( !introspection )
-	spi? ( lzma )
 	synaptics? ( gnutls )
 	uefi? ( gnutls )
 "
@@ -48,7 +45,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	dev-libs/libgpg-error
 	dev-libs/libgudev:=
 	>=dev-libs/libjcat-0.1.0[gpg,pkcs7]
-	>=dev-libs/libxmlb-0.1.13:=[introspection?]
+	>=dev-libs/libxmlb-0.1.13:=
 	$(python_gen_cond_dep '
 		dev-python/pillow[${PYTHON_USEDEP}]
 		dev-python/pycairo[${PYTHON_USEDEP}]
@@ -64,17 +61,17 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	flashrom? ( >=sys-apps/flashrom-1.2-r3 )
 	gnutls? ( net-libs/gnutls )
 	gusb? ( >=dev-libs/libgusb-0.3.5[introspection?] )
-	logitech? ( dev-libs/protobuf-c:= )
-	lzma? ( app-arch/xz-utils )
-	modemmanager? ( net-misc/modemmanager[qmi] )
 	policykit? ( >=sys-auth/polkit-0.103 )
 	systemd? ( >=sys-apps/systemd-211 )
 	tpm? ( app-crypt/tpm2-tss )
 	uefi? (
-		sys-apps/fwupd-efi
+		media-libs/fontconfig
+		media-libs/freetype
+		sys-boot/gnu-efi
 		sys-boot/efibootmgr
 		sys-fs/udisks
 		sys-libs/efivar
+		x11-libs/cairo
 	)
 "
 # Block sci-chemistry/chemical-mime-data for bug #701900
@@ -89,6 +86,10 @@ DEPEND="
 	x11-libs/pango[introspection]
 "
 
+PATCHES=(
+	"${FILESDIR}/${PN}-1.5.7-logind_plugin.patch"
+)
+
 pkg_setup() {
 	python-single-r1_pkg_setup
 	if use nvme ; then
@@ -101,60 +102,44 @@ src_prepare() {
 	# c.f. https://github.com/fwupd/fwupd/issues/1414
 	sed -e "/test('thunderbolt-self-test', e, env: test_env, timeout : 120)/d" \
 		-i plugins/thunderbolt/meson.build || die
-
-	sed -e '/platform-integrity/d' \
+	sed '/platform-integrity/d' \
 		-i plugins/meson.build || die #753521
-
-	sed -e "/install_dir.*'doc'/s/fwupd/${PF}/" \
-		-i data/builder/meson.build || die
-
 	vala_src_prepare
 }
 
 src_configure() {
-	local plugins=(
-		$(meson_use amt plugin_amt)
-		$(meson_use dell plugin_dell)
-		$(meson_use fastboot plugin_fastboot)
-		$(meson_use flashrom plugin_flashrom)
-		$(meson_use gusb plugin_altos)
-		$(meson_use logitech plugin_logitech_bulkcontroller)
-		$(meson_use modemmanager plugin_modem_manager)
-		$(meson_use nvme plugin_nvme)
-		$(meson_use spi plugin_intel_spi)
-		$(meson_use synaptics plugin_synaptics_mst)
-		$(meson_use synaptics plugin_synaptics_rmi)
-		$(meson_use thunderbolt plugin_thunderbolt)
-		$(meson_use tpm plugin_tpm)
-		$(meson_use uefi plugin_uefi_capsule)
-		$(meson_use uefi plugin_uefi_capsule_splash)
-		$(meson_use uefi plugin_uefi_pk)
-	)
-	use ppc64 && plugins+=( -Dplugin_msr="false" )
-	use riscv && plugins+=( -Dplugin_msr="false" )
-
 	local emesonargs=(
 		--localstatedir "${EPREFIX}"/var
 		-Dbuild="$(usex minimal standalone all)"
-		-Dconsolekit="false"
-		-Dcurl="true"
-		-Ddocs="$(usex gtk-doc gtkdoc none)"
-		-Defi_binary="false"
-		-Dsupported_build="true"
+		$(meson_use agent)
+		$(meson_use amt plugin_amt)
 		$(meson_use archive libarchive)
 		$(meson_use bluetooth bluez)
+		$(meson_use dell plugin_dell)
 		$(meson_use elogind)
+		$(meson_use flashrom plugin_flashrom)
 		$(meson_use gnutls)
+		$(meson_use gtk-doc gtkdoc)
 		$(meson_use gusb)
-		$(meson_use lzma)
+		$(meson_use gusb plugin_altos)
 		$(meson_use man)
+		$(meson_use nvme plugin_nvme)
 		$(meson_use introspection)
 		$(meson_use policykit polkit)
+		$(meson_use synaptics plugin_synaptics_mst)
+		$(meson_use synaptics plugin_synaptics_rmi)
 		$(meson_use systemd)
 		$(meson_use test tests)
-
-		${plugins[@]}
+		$(meson_use thunderbolt plugin_thunderbolt)
+		$(meson_use tpm plugin_tpm)
+		$(meson_use uefi plugin_uefi_capsule)
+		$(meson_use uefi plugin_uefi_pk)
+		-Dconsolekit="false"
+		-Dcurl="true"
+		# Dependencies are not available (yet?)
+		-Dplugin_modem_manager="false"
 	)
+	use ppc64 && emesonargs+=( -Dplugin_msr="false" )
 	use uefi && emesonargs+=( -Defi_os_dir="gentoo" )
 	export CACHE_DIRECTORY="${T}"
 	meson_src_configure
@@ -172,4 +157,12 @@ src_install() {
 				-i "${ED}"/etc/${PN}/daemon.conf || die
 		fi
 	fi
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	elog "In case you are using openrc as init system"
+	elog "and you're upgrading from <fwupd-1.1.0, you"
+	elog "need to start the fwupd daemon via the openrc"
+	elog "init script that comes with this package."
 }
