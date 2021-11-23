@@ -345,7 +345,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 src_compile() {
-	go build -ldflags "-s -w"
+	go build -ldflags "-s -w" || die "go build failed"
 }
 
 src_install() {
