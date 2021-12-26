@@ -1,7 +1,10 @@
 # ixti-overlay
 
-Overlay with ebuilds I maintain for my own needs which I may or may not promote
-to [::guru][], as well as ebuilds I test before opening a PR to [::gentoo][].
+This overlay contains:
+
+* ebuilds I maintain for my own needs, which may or may not end up promoted to
+  [::guru][] repository, once promoted I continue maintenance there;
+* ebuilds I'm testing before proposing changes to the [::gentoo][] repository;
 
 [::guru]: https://wiki.gentoo.org/wiki/Project:GURU
 [::gentoo]: https://github.com/gentoo/gentoo/
