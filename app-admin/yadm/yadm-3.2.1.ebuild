@@ -34,10 +34,10 @@ BDEPEND="
 	)
 "
 
-DOCS=(CHANGES README.md ${PN}.md)
+DOCS=( CHANGES README.md ${PN}.md )
 
 python_check_deps() {
-	has_version -b "dev-python/pytest[${PYTHON_USEDEP}]"
+	python_has_version -b "dev-python/pytest[${PYTHON_USEDEP}]"
 }
 
 pkg_setup() {
@@ -57,7 +57,7 @@ src_test() {
 	git config --global init.defaultBranch master || die "setting default branch name failed"
 
 	# un-hardcode path to tmp, otherwise encryption tests fail
-	sed -i "s@^cache_dir = /tmp@cache_dir = ${TMPDIR}@" pytest.ini || die
+	sed -e "/^cache_dir/s@/tmp@${T}@" -i pytest.ini || die "cannot patch cache dir"
 
 	local EPYTEST_DESELECT=(
 		test/test_alt.py # requires envtpl, not packaged
