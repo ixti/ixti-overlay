@@ -355,7 +355,7 @@ CRATES="
 	zip-0.5.13
 "
 
-inherit cargo
+inherit cargo bash-completion-r1
 
 DESCRIPTION="Fast and simple Node.js version manager"
 HOMEPAGE="https://github.com/Schniz/fnm"
@@ -380,5 +380,17 @@ src_prepare() {
 
 src_install() {
 	cargo_src_install
+
+	${D}/usr/bin/fnm completions --shell bash > fnm.bash-completion || die "Cannot generate bash completions"
+	newbashcomp fnm.bash-completion fnm
+
+	${D}/usr/bin/fnm completions --shell zsh > fnm.zsh-completion || die "Cannot generate zsh completions"
+	insinto /usr/share/zsh/site-functions
+	newins fnm.zsh-completion _fnm
+
+	${D}/usr/bin/fnm completions --shell fish > fnm.fish-completion || die "Cannot generate fish completions"
+	insinto /usr/share/fish/completion
+	newins fnm.fish-completion fnm
+
 	dodoc CHANGELOG.md README.md
 }
