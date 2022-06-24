@@ -375,8 +375,6 @@ QA_FLAGS_IGNORED="usr/bin/${PN}"
 src_prepare() {
 	eapply "${FILESDIR}/${P}-cargo.patch"
 	sed -i "s|@@REQWEST_PATH@@|\"${WORKDIR}/reqwest-${REQWEST_COMMIT}\"|g" "${S}/Cargo.toml" || die "Cannot patch reqwuest cargo dependency"
-	# local reqwest_path="reqwest = { path = '"${WORKDIR}/reqwest-${REQWEST_COMMIT}"', features = ['blocking', 'json', 'rustls-tls', 'rustls-tls-native-roots', 'brotli'], default-features = false }"
-	# sed -i "s@^reqwest =.*@${reqwest_path}@" "${S}/Cargo.toml" || die "Cannot patch reqwuest cargo dependency"
 	default
 }
 
