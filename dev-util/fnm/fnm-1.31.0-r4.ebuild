@@ -369,11 +369,26 @@ SRC_URI="
 LICENSE="Apache-2.0 BSD GPL-3 ISC MIT MPL-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="test"
+
+PROPERTIES="test_network"
+RESTRICT="!test? ( test )"
+
+DEPEND="|| ( >=app-shells/bash-3.0:* app-shells/zsh app-shells/fish )"
+RDEPEND="${DEPEND}"
+BDEPEND="
+	test? (
+		>=app-shells/bash-3.0:*
+		app-shells/zsh
+		app-shells/fish
+	)
+"
 
 QA_FLAGS_IGNORED="usr/bin/${PN}"
 
 src_prepare() {
 	eapply "${FILESDIR}/${P}-cargo.patch"
+	eapply "${FILESDIR}/${P}-tests.patch"
 	sed -i "s|@@REQWEST_PATH@@|\"${WORKDIR}/reqwest-${REQWEST_COMMIT}\"|g" "${S}/Cargo.toml" || die "Cannot patch reqwuest cargo dependency"
 	default
 }
