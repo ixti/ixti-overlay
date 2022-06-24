@@ -73,6 +73,15 @@
          EvalFnmEnv::default()
              .then(WriteFile::new(".nvmrc", "v8.10.0"))
              .then(Call::new("fnm", vec!["install"]))
+@@ -99,7 +99,7 @@ mod exec {
+ }
+ 
+ mod existing_installation {
+-    test_shell!(Bash, Zsh, Fish, PowerShell; {
++    test_shell!(Bash, Zsh, Fish; {
+         EvalFnmEnv::default()
+             .then(Call::new("fnm", vec!["install", "v8.11.3"]))
+             .then(OutputContains::new(
 @@ -110,7 +110,7 @@ mod existing_installation {
  }
  
