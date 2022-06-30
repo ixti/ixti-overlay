@@ -338,17 +338,11 @@ src_install() {
 	einstalldocs
 }
 
-pkg_preinst() {
-	UPGRADE_FROM_PRE_1_9_0=0
-
-	if has_version "<${CATEGORY}/${PN}-1.9.0" ; then
-		UPGRADE_FROM_PRE_1_9_0=1
-	fi
-}
-
 pkg_postinst() {
-	if [[ "${UPGRADE_FROM_PRE_1_9_0}" -eq 1 ]] ; then
-		einfo "vicmd_symbol config option was renamed to vimcmd_symbol"
-		einfo " "
-	fi
+	local v
+	for v in ${REPLACING_VERSIONS}; do
+		if ver_test "${v}" -lt "1.9.0"; then
+			einfo "Note that vicmd_symbol config option was renamed to vimcmd_symbol in version 1.9"
+		fi
+	done
 }
