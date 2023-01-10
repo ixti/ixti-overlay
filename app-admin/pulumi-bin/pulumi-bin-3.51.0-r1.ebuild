@@ -3,6 +3,8 @@
 
 EAPI=8
 
+inherit bash-completion-r1
+
 DESCRIPTION="Universal Infrastructure as Code"
 HOMEPAGE="https://www.pulumi.com/"
 SRC_URI="https://github.com/pulumi/pulumi/releases/download/v${PV}/pulumi-v${PV}-linux-x64.tar.gz"
@@ -19,4 +21,11 @@ S="${WORKDIR}/pulumi"
 
 src_install() {
 	dobin pulumi*
+
+	pulumi gen-completion bash > pulumi.bash-completion || die "Cannot generate bash completions"
+	newbashcomp pulumi.bash-completion pulumi
+
+	pulumi gen-completion zsh > pulumi.zsh-completion || die "Cannot generate zsh completions"
+	insinto /usr/share/zsh/site-functions
+	newins pulumi.zsh-completion _pulumi
 }
