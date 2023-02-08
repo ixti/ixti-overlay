@@ -7,7 +7,9 @@ inherit bash-completion-r1
 
 DESCRIPTION="Universal Infrastructure as Code"
 HOMEPAGE="https://www.pulumi.com/"
-SRC_URI="https://github.com/pulumi/pulumi/releases/download/v${PV}/pulumi-v${PV}-linux-x64.tar.gz"
+SRC_URI="
+	amd64? ( https://github.com/pulumi/pulumi/releases/download/v${PV}/pulumi-v${PV}-linux-x64.tar.gz )
+"
 
 LICENSE="Apache-2.0"
 SLOT="0"
